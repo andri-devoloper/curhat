@@ -2,20 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Fractal Plaid Background */
+.fractal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(45deg, #333 25%, transparent 25%) -50px 0/100px 100px,
+    linear-gradient(135deg, #333 25%, transparent 25%) -50px 0/100px 100px,
+    linear-gradient(45deg, transparent 75%, #111 75%) -50px 0/100px 100px,
+    linear-gradient(135deg, transparent 75%, #111 75%) -50px 0/100px 100px;
+  background-color: #222;
+  animation: animatePlaid 5s linear infinite;
+  z-index: -1;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Fractal Plaid Animation */
+@keyframes animatePlaid {
+  0% {
+    background-position: 0 0, 0 0, 0 0, 0 0;
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  100% {
+    background-position: 100px 100px, -100px 100px, 100px -100px, -100px -100px;
+  }
 }

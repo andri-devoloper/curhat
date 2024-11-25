@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
-    const curhatId = parseInt(params.id); // Ambil dari parameter route
+    // Ambil ID dari URL
+    const url = new URL(request.url);
+    const curhatId = parseInt(url.pathname.split("/").pop() || "");
 
     if (isNaN(curhatId)) {
       return NextResponse.json(

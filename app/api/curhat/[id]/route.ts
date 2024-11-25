@@ -3,35 +3,33 @@ import prisma from "@/app/lib/prisma";
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id } = context.params; // Mengakses id dari context.params
+    const curhatId = parseInt(id);
 
-    if (!id) {
+    if (!curhatId) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
+    // Hapus komentar yang terkait dengan curhat
     await prisma.comment.deleteMany({
-      where: { curhatId: id },
-    });
-    await prisma.curhat.delete({
-      where: { id },
+      where: { curhatId },
     });
 
+    // Periksa apakah curhat ada
     const existingCurhat = await prisma.curhat.findUnique({
-      where: { id },
-      include: { comments: true },
+      where: { id: curhatId },
     });
-
-    console.log("Curhat to delete:", existingCurhat);
 
     if (!existingCurhat) {
       return NextResponse.json({ error: "Curhat not found" }, { status: 404 });
     }
 
+    // Hapus curhat
     await prisma.curhat.delete({
-      where: { id },
+      where: { id: curhatId },
     });
 
     return NextResponse.json(
@@ -39,7 +37,7 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error deleting curhat:", error); // Log error di sini
+    console.error("Error deleting curhat:", error); // Log error untuk debugging
     return NextResponse.json(
       { error: "Failed to delete curhat and related comments" },
       { status: 500 }

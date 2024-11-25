@@ -1,25 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 
-interface Context {
-  params: {
-    id: string;
-  };
-}
-
-export async function DELETE(request: NextRequest, { params }: Context) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const id = params.id;
-    const curhatId = parseInt(id);
+    const curhatId = parseInt(params.id);
 
     if (isNaN(curhatId)) {
       return NextResponse.json(
-        { error: "ID is required and must be a number" },
+        { error: "ID must be a valid number" },
         { status: 400 }
       );
     }
 
-    // Hapus komentar yang terkait dengan curhat
+    // Hapus komentar terkait curhat
     await prisma.comment.deleteMany({
       where: { curhatId },
     });

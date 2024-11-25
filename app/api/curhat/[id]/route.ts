@@ -6,7 +6,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const curhatId = parseInt(params.id);
+    const curhatId = parseInt(params.id); // Ambil dari parameter route
 
     if (isNaN(curhatId)) {
       return NextResponse.json(

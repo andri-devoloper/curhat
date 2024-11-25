@@ -1,16 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 
-export async function DELETE(
-  request: NextRequest,
-  context: { params: { id: string } }
-) {
+interface Context {
+  params: {
+    id: string;
+  };
+}
+
+export async function DELETE(request: NextRequest, { params }: Context) {
   try {
-    const { id } = context.params; // Mengakses id dari context.params
+    const id = params.id;
     const curhatId = parseInt(id);
 
-    if (!curhatId) {
-      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    if (isNaN(curhatId)) {
+      return NextResponse.json(
+        { error: "ID is required and must be a number" },
+        { status: 400 }
+      );
     }
 
     // Hapus komentar yang terkait dengan curhat
